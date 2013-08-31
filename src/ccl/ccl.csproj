@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{937ECB5B-C435-423C-A480-0C744DA7663D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ccl</RootNamespace>
+    <AssemblyName>ccl</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommandLine.cs" />
+    <Compile Include="CommandLineImpl.cs" />
+    <Compile Include="Framework\Commands\Attributes\DescriptionAttribute.cs" />
+    <Compile Include="Framework\Commands\Attributes\Property\AliasAttribute.cs" />
+    <Compile Include="Framework\Commands\Attributes\Property\CommandAttribute.cs" />
+    <Compile Include="Framework\Commands\Attributes\Property\HiddenAttribute.cs" />
+    <Compile Include="Framework\Commands\Attributes\Property\RequiredAttribute.cs" />
+    <Compile Include="Framework\Commands\Attributes\RegisterAsAttribute.cs" />
+    <Compile Include="Framework\Commands\CommandBase.cs" />
+    <Compile Include="Framework\Commands\ICommand.cs" />
+    <Compile Include="Framework\Commands\ICommander.cs" />
+    <Compile Include="Framework\Exceptions\CommandNotFoundException.cs" />
+    <Compile Include="Framework\Exceptions\CommandNotCreatedException.cs" />
+    <Compile Include="Framework\Exceptions\CommandNotRunException.cs" />
+    <Compile Include="Framework\Factory\DefaultFactory.cs" />
+    <Compile Include="Framework\Factory\ICommandFactory.cs" />
+    <Compile Include="Framework\Factory\ValueConverters\BooleanValueSetter.cs" />
+    <Compile Include="Framework\Factory\ValueConverters\ConverterFactory.cs" />
+    <Compile Include="Framework\Factory\ValueConverters\DefaultValueSetter.cs" />
+    <Compile Include="Framework\Factory\ValueConverters\IntValueSetter.cs" />
+    <Compile Include="Framework\Factory\ValueConverters\IValueSetter.cs" />
+    <Compile Include="Framework\Factory\ValueConverters\NullValueSetter.cs" />
+    <Compile Include="Framework\Logging\ILogger.cs" />
+    <Compile Include="Framework\Logging\ILoggingScope.cs" />
+    <Compile Include="Framework\Logging\IReporter.cs" />
+    <Compile Include="Framework\Logging\LoggingScope.cs" />
+    <Compile Include="Framework\Logging\NullLogger.cs" />
+    <Compile Include="Framework\Logging\NullScope.cs" />
+    <Compile Include="Framework\Registration\ConsoleWalker.cs" />
+    <Compile Include="Framework\Registration\Element.cs" />
+    <Compile Include="Framework\Registration\IRegistrationTreeWalker.cs" />
+    <Compile Include="Framework\Registration\Tree\Command.cs" />
+    <Compile Include="Framework\Registration\Tree\Node.cs" />
+    <Compile Include="Framework\Registration\Tree\Root.cs" />
+    <Compile Include="Framework\Runner\DefaultCommandRunner.cs" />
+    <Compile Include="Framework\Runner\ICommandRunner.cs" />
+    <Compile Include="Framework\Search\CommandFound.cs" />
+    <Compile Include="Framework\Search\CommandSearchResult.cs" />
+    <Compile Include="Framework\Search\CommandNotFound.cs" />
+    <Compile Include="Framework\Search\DefaultCommandSearch.cs" />
+    <Compile Include="Framework\Search\ICommandSearch.cs" />
+    <Compile Include="Framework\Search\ISearchResultWalker.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
