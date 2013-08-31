@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -14,6 +15,7 @@ namespace ccl.Framework.Factory
     /// </summary>
     public class DefaultFactory : ICommandFactory, ISearchResultWalker
     {
+        private const string ParameterPattern = @"[\/\-]{0,1}([\w]{1,}){1}[\=\:]{0,1}([\w]{1,}){0,1}";
         private ICommand _instance;
 
         public ICommand CreateCommand(CommandSearchResult commandInfo)
@@ -35,28 +37,17 @@ namespace ccl.Framework.Factory
             {
                 _instance = CreateInstance(found);
 
-                var regexp = new Regex(@"[\/\-]{0,1}([\w]{1,}){1}[\=\:]{0,1}([\w]{1,}){0,1}", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                var cmp = StringComparer.OrdinalIgnoreCase;
+                var regexp = new Regex(ParameterPattern, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                var groupCollections = found.Params
+                    .Where(p => regexp.IsMatch(p))
+                    .Select(p => regexp.Matches(p))
+                    .Where(m => m.Count == 1)
+                    .Where(m => m[0].Groups.Count == 3)
+                    .Select(m => m[0].Groups);
 
-                foreach (var param in found.Params)
+                foreach (var groups in groupCollections)
                 {
-                    if (!regexp.IsMatch(param))
-                    {
-                        continue;
-                    }
-
-                    var matches = regexp.Matches(param);
-                    if (matches.Count != 1)
-                    {
-                        continue;
-                    }
-
-                    var groups = matches[0].Groups;
-                    if (groups.Count != 3) // magic number, since we have two groups defined + 1 by default
-                    {
-                        continue;
-                    }
-
+                    var cmp = StringComparer.OrdinalIgnoreCase;
                     const int parameter = 1;
                     const int value = 2;
 
@@ -72,7 +63,6 @@ namespace ccl.Framework.Factory
                             .Set(_instance, property, v);
                     }
                 }
-
             }
             catch (Exception exception)
             {
