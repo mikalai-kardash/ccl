@@ -1,28 +1,23 @@
 ﻿using System;
 using ccl.Framework.Commands;
-using ccl.Framework.Factory;
+using ccl.Framework.Exceptions;
 using ccl.Framework.Registration;
 using ccl.Framework.Registration.Tree;
-using ccl.Framework.Runner;
-using ccl.Framework.Search;
 
 namespace ccl
 {
-    public class CommandLineImpl
+    public class CommandLineImpl : CommandLineConfiguration, ICommandLine
     {
         private readonly Element _tree = new Root();
-        private readonly ICommandFactory _factory;
-        private readonly ICommandRunner _runner;
-        private readonly ICommandSearch _search;
 
-        public CommandLineImpl(ICommandFactory factory, ICommandRunner runner, ICommandSearch search)
+        public void Register<T>(string[] path) where T : ICommand
         {
-            _factory = factory;
-            _runner = runner;
-            _search = search;
+            Register(typeof (T), path);
         }
 
+// ReSharper disable MethodOverloadWithOptionalParameter
         public void Register(Type type, params string[] path)
+// ReSharper restore MethodOverloadWithOptionalParameter
         {
             if (path == null)
             {
@@ -39,27 +34,51 @@ namespace ccl
             {
                 if (!node.Contains(part))
                 {
-                    node.AddNode(part);
+                    node.Add(new Node(part));
                 }
                 node = node[part];
             }
 
-            node.AddCommand(type);
+            Register(type, node);
         }
 
-        public void Register<T>(string[] path) where T : ICommand
+        public void Register(Type type)
         {
-            Register(typeof (T), path);
+            Register(type, _tree);
         }
 
         public void Run(string[] args)
         {
-            var context = _search.Search(_tree, args);
-
-            foreach (var result in context)
+            var found = false;
+            foreach (var brick in Sherlock.Search(_tree, args))
             {
-                var command = _factory.CreateCommand(result);
-                _runner.Run(command);
+                found = true;
+                foreach (var catapult in Launcher)
+                {
+                    if (!catapult.CanLaunch(brick.Item1))
+                    {
+                        continue;
+                    }
+                    catapult.Launch(brick.Item1, brick.Item2);
+                    break;
+                }
+            }
+            if (!found)
+            {
+                throw new CommandNotFoundException(string.Join(" ", args));
+            }
+        }
+
+        private void Register(Type type, Element root)
+        {
+            foreach (var r in Registry)
+            {
+                if (!r.CanRegister(type))
+                {
+                    continue;
+                }
+                r.Register(type, root);
+                break;
             }
         }
     }

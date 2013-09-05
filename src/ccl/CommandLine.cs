@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ccl.Framework.Commands;
-using ccl.Framework.Commands.Attributes;
+using ccl.Framework.Configuration;
 using ccl.Framework.Factory;
-using ccl.Framework.Runner;
+using ccl.Framework.Registration;
 using ccl.Framework.Search;
 
 namespace ccl
@@ -15,34 +16,47 @@ namespace ccl
 
         static CommandLine()
         {
-            cl = new CommandLineImpl(
-                new DefaultFactory(),
-                new DefaultCommandRunner(),
-                new DefaultCommandSearch());
+            cl = new CommandLineImpl();
+
+            cl.Configure<ICommonConfiguration>()
+              .SetSearcher(new DefaultCommandSearch());
+
+            cl.Configure<IRegistryCoordination>()
+              .Add(new CommandRegistryController())
+              .Add(new CommanderRegistryController());
+
+            cl.Configure<ILaunchCoordination>()
+              .Add(new CommandLauncher())
+              .Add(new CommanderLauncher());
 
             RegisterAllCommands();
         }
 
         private static void RegisterAllCommands()
         {
-            var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes());
+            var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(GetAllTypes);
             foreach (var type in types)
             {
-                if (!typeof(ICommand).IsAssignableFrom(type))
+                var isCommandOrCommander = typeof (ICommand).IsAssignableFrom(type) ||
+                                           typeof (ICommander).IsAssignableFrom(type);
+                if (!isCommandOrCommander || type.IsAbstract)
                 {
                     continue;
                 }
 
-                var registrations = type.GetCustomAttributes(typeof (RegisterAsAttribute), false);
-                if (registrations.Length <= 0)
-                {
-                    continue;
-                }
+                cl.Register(type);
+            }
+        }
 
-                foreach (RegisterAsAttribute registration in registrations)
-                {
-                    cl.Register(type, registration.Path);
-                }
+        private static IEnumerable<Type> GetAllTypes(Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                return e.Types.Where(t => t != null).ToList();
             }
         }
 

@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Instrumentation;
+using System.Reflection;
+using ccl.Framework.Commands.Attributes.Property;
 using ccl.Framework.Registration.Tree;
 
 namespace ccl.Framework.Registration
@@ -27,11 +29,6 @@ namespace ccl.Framework.Registration
             return _list.Any(e => _cmp.Compare(node, e.Name) == 0);
         }
 
-        public void AddNode(string name)
-        {
-            _list.Add(new Node(name));
-        }
-
         public Element this[string name]
         {
             get
@@ -49,28 +46,12 @@ namespace ccl.Framework.Registration
             }
         }
 
-        public void AddCommand(Type commandType)
-        {
-            var existing = _list
-                .Where(e => e is Command)
-                .OfType<Command>()
-                .FirstOrDefault(c => c.Type == commandType);
-
-            if (existing != null)
-            {
-                throw new NotSupportedException(
-                    string.Format("Cannot add same command [{0}] using the same configuration.", commandType.FullName));
-            }
-
-            _list.Add(new Command(commandType));
-        }
-
         public void Clear()
         {
             _list.Clear();
         }
 
-        public IEnumerator<Element> GetEnumerator()
+        public virtual IEnumerator<Element> GetEnumerator()
         {
             return _list.GetEnumerator();
         }
@@ -87,6 +68,11 @@ namespace ccl.Framework.Registration
                 .OfType<Command>()
                 .Single()
                 .Type;
+        }
+
+        public void Add(Element element)
+        {
+            _list.Add(element);
         }
     }
 }

@@ -39,7 +39,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandLineTests.cs" />
+    <Compile Include="Commanders\IisTestCommander.cs" />
+    <Compile Include="CommanderTests.cs" />
+    <Compile Include="Commands\CommandWithHiddenParameter.cs" />
+    <Compile Include="Commands\CommandWithRequiredAttribute.cs" />
+    <Compile Include="CommandTests.cs" />
     <Compile Include="Commands\CannotCreateCommand.cs" />
     <Compile Include="Commands\CommandWithParameters.cs" />
     <Compile Include="Commands\FailingCommand.cs" />

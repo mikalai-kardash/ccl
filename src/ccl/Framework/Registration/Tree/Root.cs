@@ -1,4 +1,4 @@
-using ccl.Framework.Search;
+using System.Collections.Generic;
 
 namespace ccl.Framework.Registration.Tree
 {
@@ -11,6 +11,11 @@ namespace ccl.Framework.Registration.Tree
         public override void Accept(IRegistrationTreeWalker walker)
         {
             walker.Visit(this);
+        }
+
+        public override IEnumerator<Element> GetEnumerator()
+        {
+            yield break;
         }
     }
 }

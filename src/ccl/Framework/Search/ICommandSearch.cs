@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ccl.Framework.Registration;
+using ccl.Framework.Registration.Tree;
 
 namespace ccl.Framework.Search
 {
     public interface ICommandSearch
     {
-        IEnumerable<CommandSearchResult> Search(Element element, string[] args);
+        IEnumerable<Tuple<Launchable, string[]>> Search(Element element, string[] args);
     }
 }

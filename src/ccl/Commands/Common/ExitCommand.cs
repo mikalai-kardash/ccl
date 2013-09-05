@@ -3,14 +3,17 @@ using ccl.Framework.Commands;
 using ccl.Framework.Commands.Attributes;
 using ccl.Framework.Commands.Attributes.Class;
 
-namespace ccl.tests.Commands
+namespace ccl.Commands.Common
 {
-    [RegisterAs("throw", "exception")]
-    public class FailingCommand : CommandBase
+    [RegisterAs("exit")]
+    [RegisterAs("quit")]
+    public class ExitCommand : CommandBase
     {
+        public int ExitCode { get; set; }
+
         public override void Execute()
         {
-            throw new InvalidOperationException("Ha-ha-ha!");
+            Environment.Exit(ExitCode);
         }
     }
 }

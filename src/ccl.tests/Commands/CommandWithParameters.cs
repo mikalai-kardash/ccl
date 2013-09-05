@@ -1,10 +1,10 @@
 ﻿using ccl.Framework.Commands;
-using ccl.Framework.Commands.Attributes;
+using ccl.Framework.Commands.Attributes.Class;
 
 namespace ccl.tests.Commands
 {
     [RegisterAs("with", "params")]
-    public class CommandWithParameters : ICommand
+    public class CommandWithParameters : CommandBase
     {
         public string Param1
         {
@@ -28,7 +28,7 @@ namespace ccl.tests.Commands
         public static int Param2Value { get; set; }
         public static bool Param3Value { get; set; }
 
-        public void Execute()
+        public override void Execute()
         {
         }
     }

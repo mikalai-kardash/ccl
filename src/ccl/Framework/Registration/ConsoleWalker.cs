@@ -7,7 +7,10 @@ namespace ccl.Framework.Registration
     {
         public void Visit(Command command)
         {
-            throw new System.NotImplementedException();
+        }
+
+        public void Visit(Commander command)
+        {
         }
 
         public void Visit(Root root)

@@ -1,12 +1,12 @@
 ﻿using ccl.Framework.Commands;
-using ccl.Framework.Commands.Attributes;
+using ccl.Framework.Commands.Attributes.Class;
 
 namespace ccl.tests.Commands
 {
     [RegisterAs("install", "db")]
-    public class InstallDatabase : ICommand
+    public class InstallDatabase : CommandBase
     {
-        public void Execute()
+        public override void Execute()
         {
             IsExecuted = true;
         }

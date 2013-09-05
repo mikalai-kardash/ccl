@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ccl.Framework.Registration;
 using ccl.Framework.Registration.Tree;
@@ -7,7 +8,7 @@ namespace ccl.Framework.Search
 {
     public class DefaultCommandSearch : ICommandSearch
     {
-        public IEnumerable<CommandSearchResult> Search(Element element, string[] args)
+        public IEnumerable<Tuple<Launchable, string[]>> Search(Element element, string[] args)
         {
             var current = element;
             int skip = 0;
@@ -24,20 +25,10 @@ namespace ccl.Framework.Search
                 }
             }
 
-            var found = false;
             var prms = args.Skip(skip).ToArray();
-            foreach (var command in current.OfType<Command>())
+            foreach (var command in current.OfType<Launchable>())
             {
-                found = true;
-                yield return new CommandFound
-                    {
-                        CommandType = command.Type,
-                        Params = prms
-                    };
-            }
-            if (!found)
-            {
-                yield return new CommandNotFound { Params = args.ToArray() };
+                yield return new Tuple<Launchable, string[]>(command, prms);
             }
         }
     }

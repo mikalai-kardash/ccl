@@ -4,21 +4,21 @@ namespace ccl.Framework.Factory.ValueConverters
 {
     public class ConverterFactory
     {
-        public static IValueSetter GetConverter(Type toType)
+        public static IValueConverter GetConverter(Type toType)
         {
             if (toType == typeof (int))
             {
-                return new IntValueSetter();
+                return new IntValueConverter();
             }
             if (toType == typeof (bool))
             {
-                return new BooleanValueSetter();
+                return new BooleanValueConverter();
             }
             if (toType == typeof (string) || toType == typeof (object))
             {
-                return new DefaultValueSetter();
+                return new DefaultValueConverter();
             }
-            return new NullValueSetter();
+            return new NullValueConverter();
         }
     }
 }
